@@ -22,6 +22,7 @@ const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
+        console.log(user);
       } else {
         setUser(null);
       }
@@ -53,7 +54,14 @@ const AuthProvider = ({ children }) => {
   return (
     <div>
       <ThemeContext.Provider
-        value={{ login, logout, createUser, user, loading, googleLogin }}
+        value={{
+          login,
+          logout,
+          createUser,
+          user,
+          loading,
+          googleLogin,
+        }}
       >
         {children}
       </ThemeContext.Provider>
