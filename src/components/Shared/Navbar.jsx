@@ -1,15 +1,28 @@
 import { useState } from "react";
-import { Layout, Menu, Button, Modal, Form, Input, Dropdown } from "antd";
+import {
+  Layout,
+  Menu,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Dropdown,
+  Avatar,
+} from "antd";
 import {
   UserOutlined,
   LogoutOutlined,
   MenuOutlined,
+  GoogleOutlined,
   HomeOutlined,
   PlusOutlined,
   UnorderedListOutlined,
   StarOutlined,
   HeartOutlined,
+  LockOutlined,
 } from "@ant-design/icons";
+import { useContext } from "react";
+import { ThemeContext } from "../../authContext/AuthContext";
 
 const { Header } = Layout;
 
@@ -19,14 +32,42 @@ const Navbar = () => {
   const [mobileMenuVisible, setMobileMenuVisible] = useState(false);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  const user = false;
-  console.log(email, password);
+  const [error, setError] = useState(null);
+  const { createUser, login, logout, user, googleLogin } =
+    useContext(ThemeContext);
 
-  const handleLogin = () => {};
+  const handleLogin = () => {
+    login(email, password)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        setError(errorMessage);
+      });
+  };
 
-  const handleRegister = () => {};
+  const handleLoginWithGoogle = () => {
+    googleLogin()
+      .then(() => {
+        setError(null);
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        setError(errorMessage);
+      });
+  };
 
-  const handleLogout = () => {};
+  const handleRegister = () => {
+    createUser(email, password)
+      .then(() => {
+        setError(null);
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        setError(errorMessage);
+      });
+  };
 
   const menuItems = user
     ? [
@@ -47,7 +88,7 @@ const Navbar = () => {
           key: "logout",
           text: "Logout",
           icon: <LogoutOutlined />,
-          onClick: handleLogout,
+          onClick: logout,
         },
       ]
     : [
@@ -103,7 +144,10 @@ const Navbar = () => {
         <div className="hidden lg:flex items-center space-x-4">
           <Dropdown overlay={userMenu} trigger={["click"]}>
             <Button type="primary" className="flex items-center">
-              {user ? user.username : "Guest"} {user ? "" : <UserOutlined />}
+              <span className="mr-2">
+                {user ? user.username || "Guest" : "Guest"}
+              </span>
+              {user ? <Avatar icon={<UserOutlined />} /> : <UserOutlined />}
             </Button>
           </Dropdown>
         </div>
@@ -126,14 +170,7 @@ const Navbar = () => {
         title="Login"
         visible={isLoginVisible}
         onCancel={() => setLoginVisible(false)}
-        footer={[
-          <Button key="back" onClick={() => setLoginVisible(false)}>
-            Cancel
-          </Button>,
-          <Button key="submit" type="primary" onClick={handleLogin}>
-            Login
-          </Button>,
-        ]}
+        footer={null}
       >
         <Form
           layout="vertical"
@@ -146,15 +183,49 @@ const Navbar = () => {
             }
           }}
         >
-          <Form.Item name="email" label="Email" rules={[{ required: true }]}>
-            <Input />
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[
+              {
+                required: true,
+                type: "email",
+                message: "Please enter a valid email",
+              },
+            ]}
+          >
+            <Input prefix={<UserOutlined />} />
           </Form.Item>
           <Form.Item
             name="password"
             label="Password"
-            rules={[{ required: true }]}
+            rules={[
+              { required: true, message: "Please enter a password" },
+              { min: 6, message: "Password must be at least 6 characters" },
+            ]}
           >
-            <Input.Password />
+            <Input.Password prefix={<LockOutlined />} />
+          </Form.Item>
+          <Form.Item>
+            <Button
+              type="default"
+              htmlType="submit"
+              block
+              onClick={handleLogin}
+            >
+              Login
+            </Button>
+            <p className="text-red-500">{error}</p>
+          </Form.Item>
+          <Form.Item>
+            <Button
+              type="default"
+              icon={<GoogleOutlined />}
+              onClick={handleLoginWithGoogle}
+              block
+            >
+              Login with Google
+            </Button>
           </Form.Item>
         </Form>
       </Modal>
@@ -162,14 +233,7 @@ const Navbar = () => {
         title="Register"
         visible={isRegisterVisible}
         onCancel={() => setRegisterVisible(false)}
-        footer={[
-          <Button key="back" onClick={() => setRegisterVisible(false)}>
-            Cancel
-          </Button>,
-          <Button key="submit" type="primary" onClick={handleRegister}>
-            Register
-          </Button>,
-        ]}
+        footer={null}
       >
         <Form
           layout="vertical"
@@ -182,15 +246,39 @@ const Navbar = () => {
             }
           }}
         >
-          <Form.Item name="email" label="Email" rules={[{ required: true }]}>
-            <Input />
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[
+              {
+                required: true,
+                type: "email",
+                message: "Please enter a valid email",
+              },
+            ]}
+          >
+            <Input prefix={<UserOutlined />} />
           </Form.Item>
           <Form.Item
             name="password"
             label="Password"
-            rules={[{ required: true }]}
+            rules={[
+              { required: true, message: "Please enter a password" },
+              { min: 6, message: "Password must be at least 6 characters" },
+            ]}
           >
-            <Input.Password />
+            <Input.Password prefix={<LockOutlined />} />
+          </Form.Item>
+          <Form.Item>
+            <Button
+              type="default"
+              htmlType="submit"
+              block
+              onClick={handleRegister}
+            >
+              Register
+            </Button>
+            <p className="text-red-500">{error}</p>
           </Form.Item>
         </Form>
       </Modal>
