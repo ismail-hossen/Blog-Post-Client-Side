@@ -3,16 +3,21 @@ import { ThemeContext } from "../authContext/AuthContext";
 import { useState } from "react";
 import { Button, Card, Col, Divider, Form, Input, Row } from "antd";
 import { LockOutlined, GoogleOutlined, MailOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
   const [error, setError] = useState(null);
   const { login, googleLogin } = useContext(ThemeContext);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLoginWithGoogle = () => {
     googleLogin()
       .then(() => {
         setError(null);
+        toast.success("Successfully logged in!");
+        navigate(location?.state ? location.state : "/");
       })
       .catch((error) => {
         const errorMessage = error.message;
@@ -25,6 +30,8 @@ const Login = () => {
     login(email, password)
       .then(() => {
         setError(null);
+        toast.success("Successfully logged in!");
+        navigate(location?.state ? location.state : "/");
       })
       .catch((error) => {
         const errorMessage = error.message;
@@ -107,6 +114,7 @@ const Login = () => {
           </div>
         </Card>
       </Col>
+      <Toaster position="top-center" />
     </Row>
   );
 };

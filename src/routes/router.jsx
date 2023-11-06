@@ -3,6 +3,8 @@ import Root from "../layouts/Root";
 import PrivateRoute from "./PrivateRoute";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import PublicRoute from "./PublicRoute";
+import Home from "../pages/Home";
 
 const router = createBrowserRouter([
   {
@@ -10,7 +12,7 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <h1>Not found!</h1>,
     children: [
-      { index: true, element: <h1>something...</h1> },
+      { index: true, element: <Home /> },
       {
         path: "/add-blog",
         element: (
@@ -23,11 +25,19 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <PublicRoute>
+        <Login />
+      </PublicRoute>
+    ),
   },
   {
     path: "/register",
-    element: <Register />,
+    element: (
+      <PublicRoute>
+        <Register />
+      </PublicRoute>
+    ),
   },
 ]);
 

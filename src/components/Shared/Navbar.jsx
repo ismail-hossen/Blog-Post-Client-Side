@@ -94,7 +94,7 @@ const Navbar = () => {
 
   return (
     <Header className="bg-blue-500">
-      <div className="container mx-auto flex justify-between items-center lg:h-16">
+      <div className="container mx-auto flex justify-between items-center lg:h-16 w-full max-w-[1400px]">
         <h3 className="text-white text-2xl font-bold">Blog Website</h3>
         <div className="lg:hidden">
           <Button
@@ -121,7 +121,7 @@ const Navbar = () => {
       <div
         className={`${
           mobileMenuVisible ? "block" : "hidden"
-        } lg:hidden w-full bg-blue-500`}
+        } lg:hidden w-full bg-blue-500  max-w-[1400px]`}
       >
         <Menu mode="vertical" theme="dark" style={{ border: "none" }}>
           {menuItems.map((item) => (
