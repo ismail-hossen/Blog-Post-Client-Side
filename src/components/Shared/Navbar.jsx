@@ -57,8 +57,8 @@ const Navbar = () => {
         { key: "/", text: "Home", icon: <HomeOutlined /> },
         { key: "add-blog", text: "Add Blog", icon: <PlusOutlined /> },
         {
-          key: "all-blogs",
-          text: "All Blogs",
+          key: "all-blog",
+          text: "All Blog",
           icon: <UnorderedListOutlined />,
         },
         {
@@ -95,7 +95,9 @@ const Navbar = () => {
   return (
     <Header className="bg-blue-500">
       <div className="container mx-auto flex justify-between items-center lg:h-16 w-full max-w-[1400px]">
-        <h3 className="text-white text-2xl font-bold">Blog Website</h3>
+        <Link to="/" className="text-white text-2xl font-bold">
+          Blog Website
+        </Link>
         <div className="lg:hidden">
           <Button
             type="primary"
