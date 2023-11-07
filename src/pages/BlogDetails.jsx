@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { ThemeContext } from "../authContext/AuthContext";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import useAxios from "../hooks/useAxios";
@@ -12,15 +12,26 @@ const BlogDetails = () => {
   const [comment, setComment] = useState("");
 
   const {
-    isPending,
-    error,
+    isPending: loading2,
+    error: err1,
     data: blogPost,
   } = useQuery({
-    queryKey: ["blog"],
+    queryKey: ["blog-details"],
     queryFn: async () => {
       const blog = await axios.get(`/blog/${id}`);
+      return blog;
+    },
+  });
+
+  const {
+    isPending: loading3,
+    error: err2,
+    data: comments,
+  } = useQuery({
+    queryKey: ["comments"],
+    queryFn: async () => {
       const comments = await axios.get("/comments");
-      return { blog, comments };
+      return comments;
     },
   });
 
@@ -34,16 +45,17 @@ const BlogDetails = () => {
   });
 
   let content;
-  if (isPending || loading) {
+  if (loading && loading2 && loading3) {
     content = <h3>loading...</h3>;
     return;
   }
-  if (error) {
-    content = <p>{"An error has occurred: " + error.message}</p>;
+  if (err1 || err2) {
+    content = <p>{"An error has occurred: " + err1.message}</p>;
     return;
   }
+
   const { title, image, shortDescription, longDescription, userEmail, _id } =
-    blogPost?.blog.data[0] || {};
+    blogPost?.data[0] || {};
 
   const handleCommentSubmit = () => {
     mutate({
@@ -70,9 +82,12 @@ const BlogDetails = () => {
 
             <div className="mt-6">
               {userEmail === user?.email && (
-                <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
+                <Link
+                  to={`/update-blog/${id}`}
+                  className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+                >
                   Update Blog
-                </button>
+                </Link>
               )}
             </div>
 
@@ -104,7 +119,7 @@ const BlogDetails = () => {
 
             <div className="mt-6">
               <h2 className="text-xl font-bold">Comments</h2>
-              {blogPost?.comments?.data?.map((comment) => (
+              {comments?.data?.map((comment) => (
                 <div key={comment._id} className="mb-2">
                   <img
                     src={comment.profile}
