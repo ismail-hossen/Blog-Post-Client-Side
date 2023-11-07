@@ -11,12 +11,13 @@ import BlogDetails from "../pages/BlogDetails";
 import UpdateBlog from "../pages/UpdateBlog";
 import FeaturedBlogs from "../pages/FeaturedBlogs";
 import WishList from "../pages/WishList";
+import NotFound from "../pages/NotFound";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
-    errorElement: <h1>Not found!</h1>,
+    errorElement: <NotFound />,
     children: [
       { index: true, element: <Home /> },
       {

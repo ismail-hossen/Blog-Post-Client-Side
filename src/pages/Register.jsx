@@ -39,6 +39,16 @@ const Register = () => {
       });
   };
 
+  const passwordPattern = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{6,}$/;
+  const validatePassword = (rule, value) => {
+    if (value && !passwordPattern.test(value)) {
+      return Promise.reject(
+        "Password must have at least one uppercase letter, one special character, one numeric character, and be at least 6 characters long."
+      );
+    }
+    return Promise.resolve();
+  };
+
   return (
     <Row className="h-screen justify-center items-center">
       <Col span={24} sm={16} md={12} lg={8}>
@@ -72,8 +82,7 @@ const Register = () => {
                   message: "Please enter your password!",
                 },
                 {
-                  min: 6,
-                  message: "Password must be at least 6 characters",
+                  validator: validatePassword,
                 },
               ]}
             >
