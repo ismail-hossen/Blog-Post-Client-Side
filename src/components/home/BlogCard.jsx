@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import useAxios from "../../hooks/useAxios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContext } from "react";
 import { ThemeContext } from "../../authContext/AuthContext";
 import { Link } from "react-router-dom";
@@ -18,6 +18,7 @@ const BlogCard = ({ blogs }) => {
   } = blogs || {};
   const axios = useAxios();
   const { user } = useContext(ThemeContext);
+  const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
     mutationFn: (data) => {
@@ -25,6 +26,7 @@ const BlogCard = ({ blogs }) => {
     },
     onSuccess: () => {
       toast.success("See the wishlist");
+      queryClient.invalidateQueries({ queryKey: ["wishlistByUser"] });
     },
   });
 
