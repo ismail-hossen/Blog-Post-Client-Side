@@ -31,7 +31,7 @@ const Home = () => {
   return (
     <>
       <HeroSection />
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto my-16">
         <h2 className="text-3xl font-semibold mb-4">Recent Blog Posts</h2>
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
           {content

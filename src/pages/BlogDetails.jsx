@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ThemeContext } from "../authContext/AuthContext";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxios from "../hooks/useAxios";
 import toast from "react-hot-toast";
 
@@ -10,12 +10,9 @@ const BlogDetails = () => {
   const { user, loading } = useContext(ThemeContext);
   const axios = useAxios();
   const [comment, setComment] = useState("");
+  const queryClient = useQueryClient();
 
-  const {
-    isPending: loading2,
-    error: err1,
-    data: blogPost,
-  } = useQuery({
+  const { isPending: loading2, data: blogPost } = useQuery({
     queryKey: ["blog-details"],
     queryFn: async () => {
       const blog = await axios.get(`/blog/${id}`);
@@ -23,14 +20,10 @@ const BlogDetails = () => {
     },
   });
 
-  const {
-    isPending: loading3,
-    error: err2,
-    data: comments,
-  } = useQuery({
+  const { isPending: loading3, data: comments } = useQuery({
     queryKey: ["comments"],
     queryFn: async () => {
-      const comments = await axios.get("/comments");
+      const comments = await axios.get(`/comments/${id}`);
       return comments;
     },
   });
@@ -41,16 +34,13 @@ const BlogDetails = () => {
     },
     onSuccess: () => {
       toast.success("Added comment");
+      queryClient.invalidateQueries({ queryKey: ["comments"] });
     },
   });
 
   let content;
   if (loading && loading2 && loading3) {
     content = <h3>loading...</h3>;
-    return;
-  }
-  if (err1 || err2) {
-    content = <p>{"An error has occurred: " + err1.message}</p>;
     return;
   }
 

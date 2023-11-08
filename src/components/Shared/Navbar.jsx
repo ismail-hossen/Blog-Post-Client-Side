@@ -57,8 +57,8 @@ const Navbar = () => {
         { key: "/", text: "Home", icon: <HomeOutlined /> },
         { key: "add-blog", text: "Add Blog", icon: <PlusOutlined /> },
         {
-          key: "all-blog",
-          text: "All Blog",
+          key: "all-blogs",
+          text: "All Blogs",
           icon: <UnorderedListOutlined />,
         },
         {
