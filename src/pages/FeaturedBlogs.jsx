@@ -1,9 +1,8 @@
-import "ka-table/style.css";
-import { useState } from "react";
-import { kaReducer, Table } from "ka-table";
-import { DataType, EditingMode, SortingMode } from "ka-table/enums";
+import DataTable from "react-data-table-component";
 import useAxios from "../hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
+import { Avatar } from "antd";
+import { AntDesignOutlined } from "@ant-design/icons";
 
 const FeaturedBlogs = () => {
   const axios = useAxios();
@@ -15,45 +14,53 @@ const FeaturedBlogs = () => {
     },
   });
 
-  // data for ka-table
-  const dataArray = featuredBlogs?.data?.map((b, index) => ({
-    column1: index + 1,
-    column2: b.title,
-    column3: b.author,
-    id: index,
+  const data = featuredBlogs?.data?.map((b, idx) => ({
+    id: idx + 1,
+    title: b.title,
+    owner: b.author,
+    profile: b?.profile,
   }));
 
-  // initial value of the *props
-  const tablePropsInit = {
-    columns: [
-      { key: "column1", title: "Serial", dataType: DataType.String },
-      { key: "column2", title: "Title", dataType: DataType.String },
-      { key: "column3", title: "Owner", dataType: DataType.String },
-    ],
-    data: dataArray,
-    editingMode: EditingMode.Cell,
-    rowKeyField: "id",
-    sortingMode: SortingMode.Single,
-  };
-
-  // in this case *props are stored in the state of parent component
-  const [tableProps, changeTableProps] = useState(tablePropsInit);
-
-  const dispatch = (action) => {
-    // dispatch has an *action as an argument
-    // *kaReducer returns new *props according to previous state and *action, and saves new props to the state
-    changeTableProps((prevState) => kaReducer(prevState, action));
-  };
+  const columns = [
+    {
+      name: "Serial",
+      selector: (row) => row.id,
+      sortable: true,
+    },
+    {
+      name: "Title",
+      selector: (row) => row.title,
+      sortable: true,
+    },
+    {
+      name: "Blog owner",
+      selector: (row) => row.owner,
+      sortable: true,
+    },
+    {
+      name: "Profile",
+      selector: (row) => row.profile,
+      cell: (row) => {
+        return (
+          <Avatar
+            size={{ xs: 20, sm: 28, md: 40, lg: 55, xl: 65, xxl: 90 }}
+            icon={<AntDesignOutlined />}
+            src={row.profile}
+          />
+        );
+      },
+    },
+  ];
 
   return (
     <>
       {isPending ? (
-        <h1>loading</h1>
+        <h1>loading...</h1>
       ) : (
-        <Table
-          {...tableProps} // ka-table UI is rendered according to props
-          dispatch={dispatch} // dispatch is required for obtain new actions from the UI
-        />
+        <div className="container mx-auto my-16">
+          <h2 className="text-3xl font-semibold mb-4">Featured Blogs</h2>
+          <DataTable columns={columns} data={data}></DataTable>
+        </div>
       )}
     </>
   );

@@ -13,14 +13,18 @@ const WishList = () => {
   const { data: wishlist, isPending } = useQuery({
     queryKey: ["wishlistByUser"],
     queryFn: async () => {
-      const blog = await axios.get(`/wishlist?email=${user?.email}`);
+      const blog = await axios.get(`/wishlist?email=${user?.email}`, {
+        withCredentials: true,
+      });
       return blog;
     },
   });
 
   const { mutate } = useMutation({
     mutationFn: (id) => {
-      return axios.delete(`/remove-wishlist/${id}`);
+      return axios.delete(`/remove-wishlist/${id}?email=${user?.email}`, {
+        withCredentials: true,
+      });
     },
     onSuccess: () => {
       toast.success("Remove success");

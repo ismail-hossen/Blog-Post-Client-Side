@@ -15,11 +15,12 @@ const AddBlog = () => {
     category: "Technology",
     userEmail: user?.email,
     author: user?.displayName,
+    profile: user?.photoURL,
   });
 
   const { mutate } = useMutation({
     mutationFn: (data) => {
-      return axios.post("/add-blog", data);
+      return axios.post(`/add-blog?email=${user?.email}`, data);
     },
     onSuccess: () => {
       toast.success("Added blog successfully");

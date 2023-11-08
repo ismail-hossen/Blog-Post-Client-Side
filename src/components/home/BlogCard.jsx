@@ -22,7 +22,9 @@ const BlogCard = ({ blogs }) => {
 
   const { mutate } = useMutation({
     mutationFn: (data) => {
-      return axios.post("/wishlist", data);
+      return axios.post(`/wishlist?email=${user?.email}`, data, {
+        withCredentials: true,
+      });
     },
     onSuccess: () => {
       toast.success("See the wishlist");
