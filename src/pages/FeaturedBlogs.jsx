@@ -3,6 +3,8 @@ import useAxios from "../hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
 import { Avatar } from "antd";
 import { AntDesignOutlined } from "@ant-design/icons";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const FeaturedBlogs = () => {
   const axios = useAxios();
@@ -55,7 +57,21 @@ const FeaturedBlogs = () => {
   return (
     <>
       {isPending ? (
-        <h1>loading...</h1>
+        <div className="container my-16 mx-auto">
+          <Skeleton
+            className="text-3xl font-semibold mb-4"
+            height={40}
+            count={1}
+            width={200}
+          />
+          <Skeleton height={50} count={1} />
+          <div className="flex w-full justify-between">
+            <Skeleton height={40} width={190} count={10} />
+            <Skeleton height={40} width={400} count={10} />
+            <Skeleton height={40} width={300} count={10} />
+            <Skeleton height={40} width={150} count={10} />
+          </div>
+        </div>
       ) : (
         <div className="container mx-auto my-16">
           <h2 className="text-3xl font-semibold mb-4">Featured Blogs</h2>
